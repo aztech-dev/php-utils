@@ -1,6 +1,6 @@
 {
 	"repositories":[
-        	{ "type":"composer", "url":"http://satis.devio/satis/36d1d9d3d82ff11211f0e7d808ee80ea114b945b/" }
+        	{ "type":"composer", "url":"http://satis.devio/satis/bf6d0b2a-1918-5265-b018-c59a442e40c9/" }
     	],
 	"name" : "aztech/php-utils",
 	"description" : "PHP Utility classes",
@@ -18,7 +18,7 @@
 	],
 	"autoload" : {
 		"psr-4" : {
-			"Aztech\\Util" : "src/"
+			"Aztech\\Util\\" : "src/"
 		}
 	},
 	"require" : {
