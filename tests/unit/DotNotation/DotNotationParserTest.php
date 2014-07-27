@@ -1,8 +1,9 @@
 <?php
 
-namespace Aztech\Satisious\Tests\Util;
+namespace Aztech\Util\Tests;
 
-use Aztech\Satisious\Util\DotNotationParser;
+use Aztech\Util\DotNotation\DotNotationParser;
+
 class DotNotationParserTest extends \PHPUnit_Framework_TestCase
 {
     

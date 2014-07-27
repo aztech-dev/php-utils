@@ -1,9 +1,9 @@
 <?php
 
-namespace Aztech\Satisious\Tests\Util;
+namespace Aztech\Util\Tests;
 
-use Aztech\Satisious\Util\ObjectMapper;
-use Aztech\Satisious\Util\DotNotationResolver;
+use Aztech\Util\Mapping\ObjectMapper;
+use Aztech\Util\DotNotation\DotNotationResolver;
 
 class ObjectMapperTest extends \PHPUnit_Framework_TestCase
 {
