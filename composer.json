@@ -2,8 +2,8 @@
 	"repositories":[
         	{ "type":"composer", "url":"http://satis.devio/satis/36d1d9d3d82ff11211f0e7d808ee80ea114b945b/" }
     	],
-	"name" : "aztech/php-router",
-	"description" : "PHP MVC Router",
+	"name" : "aztech/php-utils",
+	"description" : "PHP Utility classes",
 	"version" : "1.0.0",
 	"type" : "library",
 	"homepage" : "http://www.aztech.io",
@@ -18,19 +18,13 @@
 	],
 	"autoload" : {
 		"psr-4" : {
-			"Fibo\\Router\\" : "src/"
+			"Aztech\\Util" : "src/"
 		}
 	},
 	"require" : {
-		"oliviermadre/dic-it":"dev-master",
-		"silex/silex":"~1.1",
-		"ezyang/htmlpurifier":"4.6.0",
-	        "symfony/yaml" : "2.5.x-dev"
 	},
 	"require-dev" : {
-		"predis/predis":"v0.8.5"
 	},
 	"suggest" : {
-		"predis/predis" : "To use the Redis session handler"
 	}
 }
