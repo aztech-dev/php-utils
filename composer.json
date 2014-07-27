@@ -1,0 +1,36 @@
+{
+	"repositories":[
+        	{ "type":"composer", "url":"http://satis.devio/satis/36d1d9d3d82ff11211f0e7d808ee80ea114b945b/" }
+    	],
+	"name" : "aztech/php-router",
+	"description" : "PHP MVC Router",
+	"version" : "1.0.0",
+	"type" : "library",
+	"homepage" : "http://www.aztech.io",
+	"time" : "2013-11-01",
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "Thibaud Fabre",
+			"email" : "thibaud@aztech.io",
+			"homepage" : "http://www.aztech.io",
+			"role" : "Developer"
+		}
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Fibo\\Router\\" : "src/"
+		}
+	},
+	"require" : {
+		"oliviermadre/dic-it":"dev-master",
+		"silex/silex":"~1.1",
+		"ezyang/htmlpurifier":"4.6.0",
+	        "symfony/yaml" : "2.5.x-dev"
+	},
+	"require-dev" : {
+		"predis/predis":"v0.8.5"
+	},
+	"suggest" : {
+		"predis/predis" : "To use the Redis session handler"
+	}
+}
