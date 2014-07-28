@@ -1,7 +1,4 @@
 {
-	"repositories":[
-        	{ "type":"composer", "url":"http://satis.devio/satis/bf6d0b2a-1918-5265-b018-c59a442e40c9/" }
-    	],
 	"name" : "aztech/php-utils",
 	"description" : "PHP Utility classes",
 	"version" : "1.0.0",

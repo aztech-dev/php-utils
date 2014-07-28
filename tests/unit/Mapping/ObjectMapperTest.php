@@ -7,7 +7,7 @@ use Aztech\Util\DotNotation\DotNotationResolver;
 
 class ObjectMapperTest extends \PHPUnit_Framework_TestCase
 {
-    
+
     public function getObjectToObjectMapping()
     {
         $objSource = new \stdClass();
@@ -16,13 +16,17 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
         $objSource->complex = new \stdClass();
         $objSource->complex->unmapped = 'complex mapped value';
         
-        $mappings = array('unmapped' => 'mapped', 'unmapped_again' => 'mapped_again', 'complex.unmapped' => 'complex_mapped'); 
-        
-        return array(
-        	array($objSource, new \stdClass(), $mappings)
+        /* @f:off */
+        $mappings = array(
+            'unmapped' => 'mapped',
+            'unmapped_again' => 'mapped_again',
+            'complex.unmapped' => 'complex_mapped'
         );
+        /* @f:on */
+        
+        return array(array($objSource,new \stdClass(),$mappings));
     }
-    
+
     /**
      * @dataProvider getObjectToObjectMapping
      */
@@ -37,11 +41,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
         $mapper->map($source, $target);
         
         foreach ($mappings as $sourceProperty => $targetProperty) {
-            $this->assertEquals(
-                DotNotationResolver::resolve($source, $sourceProperty), 
-                DotNotationResolver::resolve($target, $targetProperty)
-            );
+            $this->assertEquals(DotNotationResolver::resolve($source, $sourceProperty), DotNotationResolver::resolve($target, $targetProperty));
         }
     }
-    
 }

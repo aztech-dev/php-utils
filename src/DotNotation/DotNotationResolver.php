@@ -2,6 +2,11 @@
 
 namespace Aztech\Util\DotNotation;
 
+/**
+ * @todo Turn recursive into iterative
+ * @author thibaud
+ *
+ */
 class DotNotationResolver
 {
     
