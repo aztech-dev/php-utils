@@ -10,15 +10,17 @@ namespace Aztech\Util\DotNotation;
 class DotNotationResolver
 {
     
-    public static function resolve($value, $name)
+    public static function resolve($value, $name, $default = null)
     {
         if (! DotNotationParser::hasDot($name)) {
-            if (is_object($value)) {
+            if (is_object($value) && isset($value->{$name})) {
                 return $value->{$name};
             }
-            elseif (is_array($value)) {
+            elseif (is_array($value) && array_key_exists($name, $value)) {
                 return $value[$name];
             }
+            
+            return $default;
         }
         
         $elements = DotNotationParser::getComponents($name, 2);
