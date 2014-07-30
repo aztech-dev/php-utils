@@ -70,6 +70,6 @@ class TypedCollection extends TypedIterator
     {
         $this->validate($item);
 
-        return in_array($item, $this->items);
+        return in_array($item, $this->items, true);
     }
 }

@@ -127,5 +127,19 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($iterated);
     }
 
-
+    /**
+     * 
+     * @dataProvider getStdClassItems
+     */
+    public function testHasObjectReturnsCorrectValue($items)
+    {
+        $collection = new TypedCollection('\stdClass', $items);
+        
+        foreach ($items as $item) {
+            $this->assertTrue($collection->hasObject($item));
+        }
+        
+        $this->assertFalse($collection->hasObject(new \stdClass()));
+    }
+    
 }
