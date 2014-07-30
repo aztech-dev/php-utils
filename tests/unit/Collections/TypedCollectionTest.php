@@ -29,7 +29,8 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveObjectRejectsInvalidItems($item)
     {
-        $collection = new TypedCollection('\stdClass', $this->getStdClassItems()[0]);
+        $items = $this->getStdClassItems();
+        $collection = new TypedCollection('\stdClass', $items[0]);
 
         $collection->removeObject($item);
     }
