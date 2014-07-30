@@ -13,7 +13,8 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider getNonStdClassItems @expectedException \InvalidArgumentException
+     * @dataProvider getNonStdClassItems
+     * @expectedException \InvalidArgumentException
      */
     public function testAddObjectRejectsInvalidItems($item)
     {
@@ -22,13 +23,32 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
         $collection->addObject($item);
     }
 
-    public function testAddObjectAcceptsValidItems()
+    /**
+     * @dataProvider getNonStdClassItems
+     * @expectedException \InvalidArgumentException
+     */
+    public function testRemoveObjectRejectsInvalidItems($item)
     {
-        $items = array(
-            new \stdClass(),
-            new \stdClass()
-        );
+        $collection = new TypedCollection('\stdClass', $this->getStdClassItems()[0]);
 
+        $collection->removeObject($item);
+    }
+
+    public function getStdClassItems()
+    {
+        return array(
+            array(array(
+                new \stdClass(),
+                new \stdClass()
+            ))
+        );
+    }
+
+    /**
+     * @dataProvider getStdClassItems
+     */
+    public function testAddObjectAcceptsValidItems($items)
+    {
         $collection = new TypedCollection('\stdClass');
 
         foreach ($items as $item) {
@@ -48,13 +68,12 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($diff);
     }
 
-    public function testRemoveObjectRemovesValidItems()
+    /**
+     *
+     * @dataProvider getStdClassItems
+     */
+    public function testRemoveObjectRemovesValidItems($items)
     {
-        $items = array(
-            new \stdClass(),
-            new \stdClass()
-        );
-
         $collection = new TypedCollection('\stdClass', $items);
 
         foreach ($items as $item) {
@@ -69,4 +88,44 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEmpty($iterated);
     }
+
+    /**
+     *
+     * @dataProvider getStdClassItems
+     */
+    public function testAddRangeAddsAllItems($items)
+    {
+         $collection = new TypedCollection('\stdClass');
+
+         $collection->addRange($items);
+
+         $iterated = array();
+
+         foreach ($collection as $item) {
+             $iterated[] = $item;
+         }
+
+         $this->assertSame($items, $iterated);
+    }
+
+    /**
+     *
+     * @dataProvider getStdClassItems
+     */
+    public function testRemovesRangeRemoveAllItems($items)
+    {
+        $collection = new TypedCollection('\stdClass', $items);
+
+        $collection->removeRange($items);
+
+        $iterated = array();
+
+        foreach ($collection as $item) {
+            $iterated[] = $item;
+        }
+
+        $this->assertEmpty($iterated);
+    }
+
+
 }
