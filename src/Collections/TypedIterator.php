@@ -26,11 +26,26 @@ class TypedIterator implements \Iterator
         $this->items = $items;
     }
 
+    public function getTypeName()
+    {
+        return $this->typeName;
+    }
+
     protected function validate($item)
     {
         if (! $item instanceof $this->typeName) {
             throw new \InvalidArgumentException('Type mismatch.');
         }
+    }
+
+    public function filter($callback) {
+        if (! is_callable($callback)) {
+            throw new \InvalidArgumentException('$callback is not a callback.');
+        }
+
+        $newItems = array_filter($this->items, $callback);
+
+        return new self($this->typeName, $newItems);
     }
 
     public function rewind()

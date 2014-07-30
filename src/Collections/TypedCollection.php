@@ -21,7 +21,7 @@ class TypedCollection extends TypedIterator
         $this->validate($item);
         $this->items[] = $item;
     }
-    
+
     /**
      *
      * @param mixed $item
@@ -49,7 +49,7 @@ class TypedCollection extends TypedIterator
             return $a === $b;
         });
     }
-    
+
     /**
      *
      * @param mixed $item
@@ -60,9 +60,16 @@ class TypedCollection extends TypedIterator
         foreach ($items as $item) {
             $this->validate($item);
         }
-        
+
         $this->items = array_udiff($this->items, $items, function ($a, $b) {
             return $a === $b;
         });
+    }
+
+    public function hasObject($item)
+    {
+        $this->validate($item);
+
+        return in_array($item, $this->items, true);
     }
 }

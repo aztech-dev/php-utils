@@ -16,13 +16,22 @@ class TypedIteratorTest extends \PHPUnit_Framework_TestCase
 
         $iterator = new TypedIterator('\stdClass', $items);
     }
-
+    
     /**
      * @expectedException \InvalidArgumentException
      */
     public function testCannotInitializeWithInvalidTypeName()
     {
         $iterator = new TypedIterator('\Aztech\Util\Tests\Collections\TypedIteratorTest\DoNotUseThisClassName');
+    }
+    
+    public function testGetTypeNameReturnsCorrectName()
+    {
+        $typename = '\stdClass';
+        
+        $iterator = new TypedIterator($typename);
+        
+        $this->assertEquals($typename, $iterator->getTypeName());
     }
 
     public function testIteratingReturnsAllItems()
@@ -53,5 +62,50 @@ class TypedIteratorTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($i, $iterator->key());
             $iterator->next();
         }
+    }
+
+    public function getInvalidCallbacks()
+    {
+        return array(
+            array('string'),
+            array(12),
+            array(new \stdClass()),
+            array(array()),
+            array(true),
+            array(null),
+            array(false)
+        );
+    }
+
+    /**
+     * @dataProvider getInvalidCallbacks
+     * @expectedException \InvalidArgumentException
+     */
+    public function testFilterThrowsInvalidArgumentWithNonCallableParam($callback)
+    {
+        $iterator = new TypedIterator('\stdClass');
+
+        $iterator = $iterator->filter($callback);
+    }
+
+    public function testFilterSelectsCorrectItems()
+    {
+        $a = new \stdClass();
+        $a->test = true;
+
+        $b = new \stdClass();
+        $b->test = false;
+
+        $items = array($a, $a, $b, $b, $a);
+        $iterator = new TypedIterator('\stdClass', $items);
+
+        $iterator = $iterator->filter(function(\stdClass $item) {
+            return $item->test;
+        });
+
+        foreach ($iterator as $item) {
+            $this->assertTrue($item->test);
+        }
+
     }
 }
