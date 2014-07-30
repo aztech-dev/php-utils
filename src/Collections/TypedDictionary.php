@@ -8,7 +8,7 @@ class TypedDictionary extends TypedIterator
     public function __construct($typeName, array $items = array())
     {
         parent::__construct($typeName, $items);
-
+        
         reset($this->items);
     }
 
@@ -24,7 +24,7 @@ class TypedDictionary extends TypedIterator
 
     public function rewind()
     {
-      return reset($this->items);
+        return reset($this->items);
     }
 
     public function next()
@@ -41,11 +41,11 @@ class TypedDictionary extends TypedIterator
     {
         return in_array($item, $this->items);
     }
-    
+
     public function setKey($key, $item)
     {
         $this->validate($item);
-
+        
         $this->items[$key] = $item;
     }
 
@@ -66,7 +66,7 @@ class TypedDictionary extends TypedIterator
         if ($this->hasKey($key)) {
             return $this->items[$key];
         }
-
+        
         throw new \OutOfBoundsException('Key does not exist');
     }
 }
