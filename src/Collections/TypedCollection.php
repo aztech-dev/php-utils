@@ -55,7 +55,7 @@ class TypedCollection extends TypedIterator
      * @param mixed $item
      * @throws \InvalidArgumentException
      */
-    public function addRange(array $items)
+    public function removeRange(array $items)
     {
         foreach ($items as $item) {
             $this->validate($item);
