@@ -30,20 +30,9 @@ class ArrayResolver implements \Iterator, \Countable, \ArrayAccess
      */
     public function resolve($key, $default = null)
     {
-        $toReturn = $default;
+        $value = DotNotationResolver::resolve($this->source, $key, $default);
 
-        if (DotNotationParser::hasDot($key)) {
-            $elements = DotNotationParser::getComponents($key, 2);
-            
-            if (DotNotationResolver::propertyOrIndexExists($this->source, $elements[0])) {
-                $toReturn = DotNotationResolver::resolve($this->source, $key);        
-            }
-        }
-        elseif (DotNotationResolver::propertyOrIndexExists($this->source, $key)) {
-            $toReturn = $this->source[$key];
-        }
-
-        return $this->wrapIfNecessary($toReturn);
+        return $this->wrapIfNecessary($value);
     }
 
     private function wrapIfNecessary($value)

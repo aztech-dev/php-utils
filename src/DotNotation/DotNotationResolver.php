@@ -44,10 +44,28 @@ class DotNotationResolver
 
     private static function getDirectProperty($value, $name, $default)
     {
-        if (is_object($value) && isset($value->{$name})) {
+        if (is_object($value)) {
+            return self::getObjectProperty($value, $name, $default);
+        }
+        elseif (is_array($value)) {
+            return $value[$name];
+        }
+
+        return $default;
+    }
+
+    private static function getObjectProperty($value, $name, $default)
+    {
+        if (isset($value->{$name})) {
             return $value->{$name};
         }
-        elseif (is_array($value) && array_key_exists($name, $value)) {
+
+        return $default;
+    }
+
+    private static function getArrayProperty($value, $name, $default)
+    {
+        if (array_key_exists($name, $value)) {
             return $value[$name];
         }
 
