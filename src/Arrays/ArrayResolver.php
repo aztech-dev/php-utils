@@ -2,7 +2,6 @@
 
 namespace Aztech\Util\Arrays;
 
-use Aztech\Util\DotNotation\DotNotationParser;
 use Aztech\Util\DotNotation\DotNotationResolver;
 
 class ArrayResolver implements \Iterator, \Countable, \ArrayAccess
