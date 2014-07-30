@@ -30,8 +30,7 @@ class TypedCollection extends TypedIterator
     public function addRange(array $items)
     {
         foreach ($items as $item) {
-            $this->validate($item);
-            $this->items[] = $item;
+            $this->addObject($item);
         }
     }
 
@@ -47,6 +46,22 @@ class TypedCollection extends TypedIterator
         $this->items = array_udiff($this->items, array(
             $item
         ), function ($a, $b) {
+            return $a === $b;
+        });
+    }
+    
+    /**
+     *
+     * @param mixed $item
+     * @throws \InvalidArgumentException
+     */
+    public function addRange(array $items)
+    {
+        foreach ($items as $item) {
+            $this->validate($item);
+        }
+        
+        $this->items = array_udiff($this->items, $items, function ($a, $b) {
             return $a === $b;
         });
     }
