@@ -6,17 +6,19 @@ class DotNotationParser
 {
 
     public static function hasDot($name) {
-        return strpos($name, '.') !== false;
+        return strpos($name, '.', 1) !== false;
     }
 
     /**
      * @param integer $limit
      */
     public static function getComponents($name, $limit = null) {
-        if (self::hasDot($name)) {
-            return explode('.', $name, $limit);
+        if (! self::hasDot($name)) {
+            return array($name);
         }
 
-        return array($name);
+        $components = ($limit == null) ? explode('.', $name) : explode('.', $name, $limit);
+
+        return $components;
     }
 }

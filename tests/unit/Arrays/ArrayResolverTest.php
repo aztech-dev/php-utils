@@ -5,17 +5,26 @@ namespace Aztech\Util\Tests\Arrays;
 use Aztech\Util\Arrays\ArrayResolver;
 
 /**
- * @todo Use datasets instead of inline declarations for arrays
  * @author thibaud
  *
  */
 class ArrayResolverTest extends \PHPUnit_Framework_TestCase
 {
 
-    public function testResolveExistingNonNestedKeysReturnsNonDefaultValue()
+    public function getStandardItems()
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
+        /* @f:off */
+        return array(array(
+            array('test' => 'blamabl', 'object' => new \stdClass())
+        ));
+        /* @f:on */
+    }
 
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testResolveExistingNonNestedKeysReturnsNonDefaultValue($items)
+    {
         $resolver = new ArrayResolver($items);
 
         foreach ($items as $key => $value) {
@@ -23,22 +32,25 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testResolveExistingNestedKeysReturnsNonDefaultValue()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testResolveExistingNestedKeysReturnsNonDefaultValue($items)
     {
-        $nested = array('test' => 'blamabl', 'object' => new \stdClass());
-        $items = array('nested' => $nested);
+        $parent = array('nested' => $items);
 
-        $resolver = new ArrayResolver($items);
+        $resolver = new ArrayResolver($parent);
 
-        foreach ($nested as $key => $value) {
+        foreach ($items as $key => $value) {
             $this->assertSame($value, $resolver->resolve('nested.' . $key));
         }
     }
 
-    public function testExtractReturnsOriginalArray()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testExtractReturnsOriginalArray($items)
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
-
         $resolver = new ArrayResolver($items);
 
         $this->assertSame($items, $resolver->extract());
@@ -53,9 +65,11 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($resolver->resolve('test') instanceof ArrayResolver);
     }
 
-    public function testIterationReturnsOnlyFirstLevelProperties()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testIterationReturnsOnlyFirstLevelProperties($nested)
     {
-        $nested = array('test' => 'blamabl', 'object' => new \stdClass());
         $items = array('nested' => $nested);
 
         $resolver = new ArrayResolver($items);
@@ -72,10 +86,11 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEmpty($invalidItems);
     }
 
-    public function testCountReturnsCorrectValue()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testCountReturnsCorrectValue($items)
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
-
         $resolver = new ArrayResolver($items);
 
         $this->assertEquals(count($items), count($resolver));
@@ -92,10 +107,11 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals("value", $resolver[0]);
     }
 
-    public function testOffsetAccessorReturnsSameValuesAsWhenCallingResolve()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testOffsetAccessorReturnsSameValuesAsWhenCallingResolve($items)
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
-
         $resolver = new ArrayResolver($items);
 
         foreach ($items as $key => $value) {
@@ -103,10 +119,11 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testSettingByOffsetAcceptsAllKeysAndAssignsTheValueToTheCorrectKey()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testSettingByOffsetAcceptsAllKeysAndAssignsTheValueToTheCorrectKey($items)
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
-
         $resolver = new ArrayResolver();
 
         foreach ($items as $key => $value) {
@@ -117,15 +134,17 @@ class ArrayResolverTest extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function testUnsetClearsItem()
+    /**
+     * @dataProvider getStandardItems
+     */
+    public function testUnsetClearsItem($items)
     {
-        $items = array('test' => 'blamabl', 'object' => new \stdClass());
-
         $resolver = new ArrayResolver($items);
 
-        unset($resolver['test']);
-
-        $this->assertFalse(isset($resolver['test']));
+        foreach ($resolver as $key => $item) {
+            unset($resolver[$key]);
+            $this->assertFalse(isset($resolver[$key]));
+        }
     }
 
 }

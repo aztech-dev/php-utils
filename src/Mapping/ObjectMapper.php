@@ -40,7 +40,7 @@ class ObjectMapper
         $exists = $this->hasPropertyOrIndex($source, $sourceKey);
 
         if (! $required && ! $exists) {
-            continue;
+            return;
         }
 
         if (! $exists) {
@@ -60,7 +60,7 @@ class ObjectMapper
         return DotNotationResolver::resolve($source, $key);
     }
 
-    private function assign($target, $targetKey, $value)
+    private function assign(& $target, $targetKey, $value)
     {
         if (is_array($target)) {
             $target[$targetKey] = $value;

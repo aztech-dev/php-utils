@@ -10,38 +10,96 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
 
     public function getObjectToObjectMapping()
     {
+        /* @ f:off */
         $objSource = new \stdClass();
         $objSource->unmapped = 'mapped value';
         $objSource->unmapped_again = 'mapped value again';
         $objSource->complex = new \stdClass();
         $objSource->complex->unmapped = 'complex mapped value';
-        
-        /* @f:off */
+
+        $arrSource = array();
+        $arrSource['unmapped'] = 'mapped value';
+        $arrSource['unmapped_again'] = 'mapped value again';
+        $arrSource['complex'] = new \stdClass();
+        $arrSource['complex.unmapped'] = 'complex mapped value';
+
         $mappings = array(
-            'unmapped' => 'mapped',
-            'unmapped_again' => 'mapped_again',
-            'complex.unmapped' => 'complex_mapped'
+            'unmapped' => array('mapped', false),
+            'unmapped_again' => array('mapped_again', false),
+            'complex.unmapped' => array('complex_mapped', false)
+        );
+
+        $constants = array(
+          'constant' => 'constant-value'
+        );
+
+        return array(
+            array($objSource,new \stdClass(),$mappings, $constants),
+            array($arrSource, array(), $mappings, $constants)
+
         );
         /* @f:on */
-        
-        return array(array($objSource,new \stdClass(),$mappings));
     }
 
     /**
      * @dataProvider getObjectToObjectMapping
      */
-    public function testObjectToObjectMapping($source, $target, $mappings)
+    public function testObjectToObjectMapping($source, $target, $mappings, $constants)
     {
         $mapper = new ObjectMapper();
-        
+
         foreach ($mappings as $sourceProperty => $targetProperty) {
-            $mapper->addMapping($sourceProperty, $targetProperty, false);
+            $mapper->addMapping($sourceProperty, $targetProperty[0], false);
         }
-        
+
+        foreach ($constants as $targetProperty => $value) {
+            $mapper->addConstantMapping($targetProperty, $value);
+        }
+
         $mapper->map($source, $target);
-        
+
         foreach ($mappings as $sourceProperty => $targetProperty) {
-            $this->assertEquals(DotNotationResolver::resolve($source, $sourceProperty), DotNotationResolver::resolve($target, $targetProperty));
+            $this->assertEquals(DotNotationResolver::resolve($source, $sourceProperty),
+                DotNotationResolver::resolve($target, $targetProperty[0]));
+        }
+
+        foreach ($constants as $name => $value) {
+            $this->assertEquals(DotNotationResolver::resolve($target, $name), $value, $name);
+        }
+    }
+
+    /**
+     * @dataProvider getObjectToObjectMapping
+     * @expectedException \InvalidArgumentException
+     */
+    public function testObjectToObjectMappingThrowsExceptionOnMissingRequiredSourceProperties($source, $target, $mappings, $constants)
+    {
+        $mapper = new ObjectMapper();
+
+        foreach ($mappings as $sourceProperty => $targetProperty) {
+            $sourceProperty .= '_missing_for_sure_' . md5(rand());
+            $mapper->addMapping($sourceProperty, $targetProperty[0], true);
+        }
+
+        $mapper->map($source, $target);
+    }
+
+    /**
+     * @dataProvider getObjectToObjectMapping
+     */
+    public function testObjectToObjectMappingIgnoresMissingOptionalSourceProperties($source, $target, $mappings, $constants)
+    {
+        $mapper = new ObjectMapper();
+
+        foreach ($mappings as $sourceProperty => $targetProperty) {
+            $sourceProperty .= '_missing_for_sure_' . md5(rand());
+            $mapper->addMapping($sourceProperty, $targetProperty[0], false);
+        }
+
+        $mapper->map($source, $target);
+
+        foreach ($mappings as $sourceProperty => $targetProperty) {
+            $this->assertFalse(DotNotationResolver::propertyOrIndexExists($target, $targetProperty[0]));
         }
     }
 }

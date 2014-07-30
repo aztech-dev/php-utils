@@ -17,9 +17,9 @@ class DotNotationResolver
         }
 
         $elements = DotNotationParser::getComponents($name, 2);
-        $firstLevelObject = self::resolve($value, $elements[0]);
+        $firstLevelObject = self::resolve($value, $elements[0], $default);
 
-        return self::resolve($firstLevelObject, $elements[1]);
+        return self::resolve($firstLevelObject, $elements[1], $default);
     }
 
     public static function propertyOrIndexExists($value, $name)
@@ -29,7 +29,7 @@ class DotNotationResolver
         }
 
         $elements = DotNotationParser::getComponents($name, 2);
-        $firstLevelObject = self::resolve($value, $elements[0]);
+        $firstLevelObject = self::resolve($value, $elements[0], null);
 
         return self::propertyOrIndexExists($firstLevelObject, $elements[1]);
     }
@@ -38,9 +38,16 @@ class DotNotationResolver
     {
         if (is_object($value)) {
             return isset($value->{$name});
-        } elseif (is_array($value) || $value instanceof \ArrayAccess) {
+        } elseif (self::hasOffsetAccessor($value)) {
             return isset($value[$name]);
         }
+
+        return false;
+    }
+
+    private static function hasOffsetAccessor($value)
+    {
+        return (is_array($value) || $value instanceof \ArrayAccess);
     }
 
     private static function getDirectProperty($value, $name, $default)
