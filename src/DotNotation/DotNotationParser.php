@@ -9,6 +9,9 @@ class DotNotationParser
         return strpos($name, '.') !== false;  
     }
     
+    /**
+     * @param integer $limit
+     */
     public static function getComponents($name, $limit = null) {
         if (self::hasDot($name)) {
             return explode('.', $name, $limit);
