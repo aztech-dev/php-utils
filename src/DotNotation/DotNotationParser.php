@@ -4,11 +4,11 @@ namespace Aztech\Util\DotNotation;
 
 class DotNotationParser
 {
-    
+
     public static function hasDot($name) {
-        return strpos($name, '.') !== false;  
+        return strpos($name, '.') !== false;
     }
-    
+
     /**
      * @param integer $limit
      */
@@ -16,7 +16,7 @@ class DotNotationParser
         if (self::hasDot($name)) {
             return explode('.', $name, $limit);
         }
-        
+
         return array($name);
     }
 }

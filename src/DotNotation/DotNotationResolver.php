@@ -3,9 +3,9 @@
 namespace Aztech\Util\DotNotation;
 
 /**
+ *
  * @todo Turn recursive into iterative
  * @author thibaud
- *
  */
 class DotNotationResolver
 {
@@ -22,7 +22,8 @@ class DotNotationResolver
         return self::resolve($firstLevelObject, $elements[1]);
     }
 
-    public static function propertyOrIndexExists($value, $name) {
+    public static function propertyOrIndexExists($value, $name)
+    {
         if (! DotNotationParser::hasDot($name)) {
             return self::checkDirectProperty($value, $name);
         }
@@ -33,11 +34,11 @@ class DotNotationResolver
         return self::propertyOrIndexExists($firstLevelObject, $elements[1]);
     }
 
-    private static function checkDirectProperty($value, $name)  {
+    private static function checkDirectProperty($value, $name)
+    {
         if (is_object($value)) {
             return isset($value->{$name});
-        }
-        elseif (is_array($value) || $value instanceof \ArrayAccess) {
+        } elseif (is_array($value) || $value instanceof \ArrayAccess) {
             return isset($value[$name]);
         }
     }
@@ -46,9 +47,8 @@ class DotNotationResolver
     {
         if (is_object($value)) {
             return self::getObjectProperty($value, $name, $default);
-        }
-        elseif (is_array($value)) {
-            return $value[$name];
+        } elseif (is_array($value)) {
+            return self::getArrayProperty($value, $name, $default);
         }
 
         return $default;
@@ -71,5 +71,4 @@ class DotNotationResolver
 
         return $default;
     }
-
 }
