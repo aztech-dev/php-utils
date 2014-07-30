@@ -14,8 +14,10 @@ before_script:
   - phpenv rehash
 
 script: 
-  - phpunit --coverage-text
+  - phpunit --coverage-text --coverage-clover=coverage.clover
   - ./vendor/bin/phpcs --standard=./phpcs.xml -n --report=gitblame ./src
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover coverage.clover
 
 matrix:
   fast_finish: true
