@@ -34,9 +34,14 @@ class TypedDictionary extends TypedIterator
 
     public function valid()
     {
-        return isset($this->items[$this->key]);
+        return isset($this->items[$this->key()]);
     }
 
+    public function has($item)
+    {
+        return in_array($item, $this->items);
+    }
+    
     public function setKey($key, $item)
     {
         $this->validate($item);
