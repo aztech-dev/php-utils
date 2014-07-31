@@ -36,5 +36,4 @@ class StandardIterator implements \Iterator
     {
         return key($this->items);
     }
-
 }
