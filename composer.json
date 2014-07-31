@@ -1,7 +1,6 @@
 {
   "name" : "aztech/php-utils",
   "description" : "PHP Utility classes",
-  "version" : "1.0.0",
   "type" : "library",
   "homepage" : "http://www.aztech.io",
   "time" : "2013-11-01",
