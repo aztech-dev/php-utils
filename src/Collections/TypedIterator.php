@@ -12,8 +12,8 @@ class TypedIterator implements \Iterator
 
     public function __construct($typeName, array $items = array())
     {
-        if (! class_exists($typeName, true)) {
-            throw new \InvalidArgumentException('Class \'' . $typeName . '\' does not exist.');
+        if (! class_exists($typeName, true) && ! interface_exists($typeName, true)) {
+            throw new \InvalidArgumentException('Class or interface \'' . $typeName . '\' does not exist.');
         }
 
         $this->typeName = $typeName;
