@@ -16,7 +16,7 @@ class TypedIteratorTest extends \PHPUnit_Framework_TestCase
 
         $iterator = new TypedIterator('\stdClass', $items);
     }
-    
+
     /**
      * @expectedException \InvalidArgumentException
      */
@@ -24,13 +24,24 @@ class TypedIteratorTest extends \PHPUnit_Framework_TestCase
     {
         $iterator = new TypedIterator('\Aztech\Util\Tests\Collections\TypedIteratorTest\DoNotUseThisClassName');
     }
-    
+
+    public function testCanInitializeWithClassOrInterface()
+    {
+        $iterator = new TypedIterator('\stdClass');
+
+        $this->assertNotNull($iterator);
+
+        $iterator = new TypedIterator('\Iterator');
+
+        $this->assertNotNull($iterator);
+    }
+
     public function testGetTypeNameReturnsCorrectName()
     {
         $typename = '\stdClass';
-        
+
         $iterator = new TypedIterator($typename);
-        
+
         $this->assertEquals($typename, $iterator->getTypeName());
     }
 
