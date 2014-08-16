@@ -11,7 +11,8 @@ class Timer
 
     private $endTime = 0;
 
-    public function start() {
+    public function start()
+    {
         $this->started = true;
         $this->reset();
     }
@@ -31,5 +32,4 @@ class Timer
     {
         return round($this->endTime - $this->startTime, 3);
     }
-
 }
