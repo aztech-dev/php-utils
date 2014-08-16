@@ -1,6 +1,6 @@
 <?php
 
-namespace Aztech\Events\File;
+namespace Aztech\Util\File;
 
 class Files
 {
