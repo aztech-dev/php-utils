@@ -15,7 +15,8 @@ class Files
     public static function invokeEx($callback, $handle)
     {
         if (flock($handle, LOCK_EX)) {
-            $result = call_user_func_array($callback,  array_splice(func_get_args(), 1));
+            $args = array_splice(func_get_args(), 1);
+            $result = call_user_func_array($callback,  $args);
 
             flock($handle, LOCK_UN);
             
