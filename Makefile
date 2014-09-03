@@ -10,8 +10,17 @@ pretest:
 phpunit: pretest
 	@vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
 
+ifndef STRICT
+STRICT = 0
+endif
+
+ifeq "$(STRICT)" "1"
+phpcs: pretest
+	@vendor/bin/phpcs --standard=phpcs.xml src
+else
 phpcs: pretest
 	@vendor/bin/phpcs --standard=phpcs.xml -n src
+endif
 
 bugfree: pretest
 	@vendor/bin/bugfree lint src

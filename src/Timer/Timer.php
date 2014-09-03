@@ -13,13 +13,13 @@ class Timer
 
     /**
      *
-     * @var double
+     * @var float
      */
     private $startTime = 0;
 
     /**
      *
-     * @var double
+     * @var float
      */
     private $endTime = 0;
 
@@ -31,13 +31,13 @@ class Timer
 
     public function stop()
     {
-        $this->endTime = microtime(true);
+        $this->endTime = (float) microtime(true);
         $this->started = false;
     }
 
     public function reset()
     {
-        $this->startTime = microtime(true);
+        $this->startTime = (float) microtime(true);
     }
 
     public function getElapsed()

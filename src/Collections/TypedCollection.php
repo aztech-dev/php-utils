@@ -3,7 +3,8 @@
 namespace Aztech\Util\Collections;
 
 /**
- * Base class providing type constrained collection methods that can be extended to provide type-hinted methods that rely on the methods declared here.
+ * Base class providing type constrained collection methods that can be extended
+ * to provide type-hinted methods that rely on the methods declared here.
  * @author thibaud
  */
 class TypedCollection extends TypedIterator
