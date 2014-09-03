@@ -2,7 +2,6 @@
 
 namespace Aztech\Util\Mapping;
 
-use \Aztech\Util\DotNotation\DotNotationParser;
 use \Aztech\Util\DotNotation\DotNotationResolver;
 
 class ObjectMapper

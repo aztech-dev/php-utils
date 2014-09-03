@@ -2,7 +2,7 @@
 
 namespace Aztech\Util\Callbacks;
 
-use Aztech\Events\File\Files;
+use Aztech\Util\File\Files;
 
 class IpcSynchronizedCallback
 {
@@ -20,7 +20,7 @@ class IpcSynchronizedCallback
         if (! $callback || ! is_callable($callback)) {
             throw new \InvalidArgumentException('Parameter is not a valid callback.');
         }
-        
+
         $this->callback = $callback;
         $this->hash = var_export($this->callback, true);
         $this->lockDirectory = $lockDirectory;
@@ -29,10 +29,10 @@ class IpcSynchronizedCallback
     public function __invoke()
     {
         $this->file = fopen($this->lockDirectory . '/' . $this->hash . '.lock', 'c+');
-        
+
         if ($this->file) {
             $result = Files::invokeEx(array($this,'call'), $handle, func_get_args());
-            
+
             fclose($this->file);
         }
     }
