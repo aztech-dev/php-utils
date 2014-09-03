@@ -22,7 +22,7 @@ class TypedCollection extends TypedIterator
 
     /**
      *
-     * @param mixed $item
+     * @param mixed $items
      * @throws \InvalidArgumentException
      */
     public function addRange(array $items)
@@ -50,7 +50,7 @@ class TypedCollection extends TypedIterator
 
     /**
      *
-     * @param mixed $item
+     * @param mixed $items
      * @throws \InvalidArgumentException
      */
     public function removeRange(array $items)
