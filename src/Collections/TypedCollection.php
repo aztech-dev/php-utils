@@ -59,6 +59,9 @@ class TypedCollection extends TypedIterator
             $this->validate($item);
         }
 
+        // Dirty hack for HHVM, see https://github.com/facebook/hhvm/issues/3653
+        array_unshift($items, null);
+
         $this->items = array_udiff($this->items, $items, function ($a, $b) {
             return $a === $b;
         });

@@ -62,11 +62,7 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
             $iterated[] = $item;
         }
 
-        $diff = array_udiff($items, $iterated, function ($a, $b) {
-            return $a === $b;
-        });
-
-        $this->assertEmpty($diff);
+        $this->assertEquals($items, $iterated);
     }
 
     /**
@@ -129,18 +125,18 @@ class TypedCollectionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * 
+     *
      * @dataProvider getStdClassItems
      */
     public function testHasObjectReturnsCorrectValue($items)
     {
         $collection = new TypedCollection('\stdClass', $items);
-        
+
         foreach ($items as $item) {
             $this->assertTrue($collection->hasObject($item));
         }
-        
+
         $this->assertFalse($collection->hasObject(new \stdClass()));
     }
-    
+
 }
