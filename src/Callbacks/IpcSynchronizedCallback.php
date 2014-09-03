@@ -22,7 +22,7 @@ class IpcSynchronizedCallback
         }
 
         $this->callback = $callback;
-        $this->hash = var_export($this->callback, true);
+        $this->hash = md5(var_export($this->callback, true));
         $this->lockDirectory = $lockDirectory;
     }
 
@@ -33,7 +33,7 @@ class IpcSynchronizedCallback
         $this->file = fopen($this->lockDirectory . '/' . $this->hash . '.lock', 'c+');
 
         if ($this->file) {
-            $result = Files::invokeEx(array($this,'call'), $handle, func_get_args());
+            $result = Files::invokeEx(array($this,'call'), $this->file, func_get_args());
 
             fclose($this->file);
         }
