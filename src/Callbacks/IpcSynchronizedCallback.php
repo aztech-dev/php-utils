@@ -28,6 +28,8 @@ class IpcSynchronizedCallback
 
     public function __invoke()
     {
+        $result = null;
+
         $this->file = fopen($this->lockDirectory . '/' . $this->hash . '.lock', 'c+');
 
         if ($this->file) {
@@ -35,6 +37,8 @@ class IpcSynchronizedCallback
 
             fclose($this->file);
         }
+
+        return $result;
     }
 
     public function call($handle, $args)

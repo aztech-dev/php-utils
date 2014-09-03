@@ -5,10 +5,22 @@ namespace Aztech\Util\Timer;
 class Timer
 {
 
+    /**
+     *
+     * @var bool
+     */
     private $started = false;
 
+    /**
+     *
+     * @var double
+     */
     private $startTime = 0;
 
+    /**
+     *
+     * @var double
+     */
     private $endTime = 0;
 
     public function start()
