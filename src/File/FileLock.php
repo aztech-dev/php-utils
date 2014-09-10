@@ -9,6 +9,9 @@ class FileLock
 
     private $handle;
 
+    /**
+     * @param resource $file
+     */
     public function __construct($file)
     {
         if (is_string($file)) {
@@ -36,7 +39,6 @@ class FileLock
      *
      * @todo Loop until lock is avail, within timeout
      * @param callable $callback
-     * @param mixed $args,...
      * @return mixed|false
      */
     public function invokeEx(callable $callback)
