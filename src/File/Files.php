@@ -2,6 +2,11 @@
 
 namespace Aztech\Util\File;
 
+/**
+ * @deprecated Use the FileLock class instead
+ * @author thibaud
+ *
+ */
 class Files
 {
 

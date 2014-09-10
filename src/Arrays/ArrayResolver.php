@@ -2,21 +2,32 @@
 
 namespace Aztech\Util\Arrays;
 
+use Aztech\Util\Collections\StandardIterator;
 use Aztech\Util\DotNotation\DotNotationResolver;
 
-class ArrayResolver implements \Iterator, \Countable, \ArrayAccess
+/**
+ *
+ * @author thibaud
+ */
+class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 {
 
-    private $source;
+    private $resolver = null;
 
-    public function __construct(array $source = array())
+    public function __construct(array $items = array(), DotNotationResolver $resolver = null)
     {
-        $this->source = $source;
+        parent::__construct($items);
+
+        $this->resolver = $resolver;
+
+        if ($this->resolver === null) {
+            $this->resolver = new DotNotationResolver();
+        }
     }
 
     public function extract()
     {
-        return $this->source;
+        return $this->items;
     }
 
     /**
@@ -29,7 +40,7 @@ class ArrayResolver implements \Iterator, \Countable, \ArrayAccess
      */
     public function resolve($key, $default = null)
     {
-        $value = DotNotationResolver::resolve($this->source, $key, $default);
+        $value = $this->resolver->resolve($this->items, $key, $default);
 
         return $this->wrapIfNecessary($value);
     }
@@ -43,59 +54,38 @@ class ArrayResolver implements \Iterator, \Countable, \ArrayAccess
         return $value;
     }
 
-    public function rewind()
-    {
-        reset($this->source);
-    }
-
     public function current()
     {
-        return $this->wrapIfNecessary(current($this->source));
-    }
-
-    public function key()
-    {
-        return key($this->source);
-    }
-
-    public function next()
-    {
-        return next($this->source);
-    }
-
-    public function valid()
-    {
-        $key = key($this->source);
-
-        return ($key !== null && $key !== false);
+        return $this->wrapIfNecessary(current($this->items));
     }
 
     public function count()
     {
-        return count($this->source);
+        return count($this->items);
     }
 
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
-            $this->source[] = $value;
-        } else {
-            $this->source[$offset] = $value;
+            $this->items[] = $value;
+            return;
         }
+
+        $this->items[$offset] = $value;
     }
 
     public function offsetExists($offset)
     {
-        return isset($this->source[$offset]);
+        return isset($this->items[$offset]);
     }
 
     public function offsetUnset($offset)
     {
-        unset($this->source[$offset]);
+        unset($this->items[$offset]);
     }
 
     public function offsetGet($offset)
     {
-        return isset($this->source[$offset]) ? $this->source[$offset] : null;
+        return isset($this->items[$offset]) ? $this->items[$offset] : null;
     }
 }

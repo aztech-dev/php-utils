@@ -3,65 +3,99 @@
 namespace Aztech\Util\DotNotation;
 
 /**
- *
+ * @deprecated Warning, all static methods are deprecated. Use instance methods instance. Deprecation and static methods
+ * will be removed in next major release.
  * @todo Turn recursive into iterative
  * @author thibaud
+ * @method mixed resolve(mixed $value, string $name, mixed $default = null)
+ * @method bool propertyOrIndexExists(mixed $value, string $name)
  */
 class DotNotationResolver
 {
 
-    public static function resolve($value, $name, $default = null)
+    private static $instance = null;
+
+    private $parser = null;
+
+    public function __construct(DotNotationParser $parser = null)
     {
-        if (! DotNotationParser::hasDot($name)) {
-            return self::getDirectProperty($value, $name, $default);
+        if ($parser === null) {
+            $parser = new DotNotationParser();
         }
 
-        $elements = DotNotationParser::getComponents($name, 2);
-        $firstLevelObject = self::resolve($value, $elements[0], $default);
-
-        return self::resolve($firstLevelObject, $elements[1], $default);
+        $this->parser = $parser;
     }
 
-    public static function propertyOrIndexExists($value, $name)
+    public static function __callStatic($method, $args)
     {
-        if (! DotNotationParser::hasDot($name)) {
-            return self::checkDirectProperty($value, $name);
+        if (self::$instance == null) {
+            self::$instance = new self(new DotNotationParser());
         }
 
-        $elements = DotNotationParser::getComponents($name, 2);
-        $firstLevelObject = self::resolve($value, $elements[0], null);
-
-        return self::propertyOrIndexExists($firstLevelObject, $elements[1]);
+        return call_user_func_array(array(self::$instance, $method), $args);
     }
 
-    private static function checkDirectProperty($value, $name)
+    public function __call($method, $args)
+    {
+        $prefix = 'public';
+
+        if (method_exists($this, $prefix . $method)) {
+            return call_user_func_array(array($this, $prefix . $method), $args);
+        }
+    }
+
+    private function publicResolve($value, $name, $default = null)
+    {
+        if (! $this->parser->hasDot($name)) {
+            return $this->getDirectProperty($value, $name, $default);
+        }
+
+        $elements = $this->parser->getComponents($name, 2);
+        $firstLevelObject = $this->publicResolve($value, $elements[0], $default);
+
+        return $this->publicResolve($firstLevelObject, $elements[1], $default);
+    }
+
+    private function publicPropertyOrIndexExists($value, $name)
+    {
+        if (! $this->parser->hasDot($name)) {
+            return $this->checkDirectProperty($value, $name);
+        }
+
+        $elements = $this->parser->getComponents($name, 2);
+        $firstLevelObject = $this->publicResolve($value, $elements[0], null);
+
+        return $this->publicPropertyOrIndexExists($firstLevelObject, $elements[1]);
+    }
+
+    private function checkDirectProperty($value, $name)
     {
         if (is_object($value)) {
             return isset($value->{$name});
-        } elseif (self::hasOffsetAccessor($value)) {
+        } elseif ($this->hasOffsetAccessor($value)) {
             return isset($value[$name]);
         }
 
         return false;
     }
 
-    private static function hasOffsetAccessor($value)
+    private function hasOffsetAccessor($value)
     {
         return (is_array($value) || $value instanceof \ArrayAccess);
     }
 
-    private static function getDirectProperty($value, $name, $default)
+    private function getDirectProperty($value, $name, $default)
     {
         if (is_object($value)) {
-            return self::getObjectProperty($value, $name, $default);
+            return $this->getObjectProperty($value, $name, $default);
         } elseif (is_array($value)) {
-            return self::getArrayProperty($value, $name, $default);
+            return $this->getArrayProperty($value, $name, $default);
         }
 
         return $default;
     }
 
-    private static function getObjectProperty($value, $name, $default)
+    private function getObjectProperty($value, $name, $default)
     {
         if (isset($value->{$name})) {
             return $value->{$name};
@@ -70,7 +104,7 @@ class DotNotationResolver
         return $default;
     }
 
-    private static function getArrayProperty($value, $name, $default)
+    private function getArrayProperty($value, $name, $default)
     {
         if (array_key_exists($name, $value)) {
             return $value[$name];

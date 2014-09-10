@@ -44,8 +44,8 @@ class TypedCollection extends TypedIterator
 
         $this->items = array_udiff($this->items, array(
             $item
-        ), function ($a, $b) {
-            return $a === $b;
+        ), function ($first, $other) {
+            return $first === $other;
         });
     }
 
@@ -63,8 +63,8 @@ class TypedCollection extends TypedIterator
         // Dirty hack for HHVM, see https://github.com/facebook/hhvm/issues/3653
         array_unshift($items, null);
 
-        $this->items = array_udiff($this->items, $items, function ($a, $b) {
-            return $a === $b;
+        $this->items = array_udiff($this->items, $items, function ($first, $other) {
+            return $first === $other;
         });
     }
 

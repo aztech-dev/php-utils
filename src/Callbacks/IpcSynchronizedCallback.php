@@ -2,7 +2,7 @@
 
 namespace Aztech\Util\Callbacks;
 
-use Aztech\Util\File\Files;
+use Aztech\Util\File\FileLock;
 
 class IpcSynchronizedCallback
 {
@@ -15,6 +15,8 @@ class IpcSynchronizedCallback
 
     private $file;
 
+    private $fileLock;
+
     public function __construct($callback, $lockDirectory = '/tmp/')
     {
         if (! $callback || ! is_callable($callback)) {
@@ -24,18 +26,20 @@ class IpcSynchronizedCallback
         $this->callback = $callback;
         $this->hash = md5(var_export($this->callback, true));
         $this->lockDirectory = $lockDirectory;
+        $this->fileLock = new FileLock(fopen($this->lockDirectory . '/' . $this->hash . '.lock', 'c+'));
+    }
+
+    public function __destruct()
+    {
+        fclose($this->file);
     }
 
     public function __invoke()
     {
         $result = null;
 
-        $this->file = fopen($this->lockDirectory . '/' . $this->hash . '.lock', 'c+');
-
         if ($this->file) {
-            $result = Files::invokeEx(array($this,'call'), $this->file, func_get_args());
-
-            fclose($this->file);
+            $result = $this->fileLock->invokeEx(array($this,'call'), func_get_args());
         }
 
         return $result;
