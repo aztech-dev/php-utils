@@ -1,5 +1,5 @@
 test: phpunit phpcs bugfree phpmd
-test-analysis: phpcs bugfree
+test-analysis: phpcs bugfree phpmd
 test-upload: scrutinizer
 
 install:
