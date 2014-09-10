@@ -45,7 +45,7 @@ class IpcSynchronizedCallback
         return $result;
     }
 
-    public function call($handle, $args)
+    public function call($args)
     {
         return call_user_func_array($this->callback, $args);
     }

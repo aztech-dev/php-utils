@@ -1,9 +1,19 @@
+# If the first argument is one of the supported commands...
+SUPPORTED_COMMANDS := "install"
+SUPPORTS_MAKE_ARGS := $(findstring $(firstword $(MAKECMDGOALS)), $(SUPPORTED_COMMANDS))
+ifneq "$(SUPPORTS_MAKE_ARGS)" ""
+    # use the rest as arguments for the command
+    COMMAND_ARGS := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))
+    # ...and turn them into do-nothing targets
+    $(eval $(COMMAND_ARGS):;@:)
+endif
+
 test: phpunit phpcs bugfree phpmd
 test-analysis: phpcs bugfree phpmd
 test-upload: scrutinizer
 
 install:
-	make -f Makefile.docker -- composer install --no-dev
+	make -f Makefile.docker -- composer install $(COMMAND_ARGS)
 
 update:
 
@@ -33,7 +43,7 @@ bugfree: pretest
 	vendor/bin/bugfree lint src -c bugfree.json
 
 phpmd: pretest
-	vendor/bin/phpmd src/ text cleancode,codesize,naming
+	vendor/bin/phpmd src/ text design,naming,cleancode,codesize,controversial,unusedcode
 
 ocular:
 	[ ! -f ocular.phar ] && wget https://scrutinizer-ci.com/ocular.phar
