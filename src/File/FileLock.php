@@ -42,7 +42,8 @@ class FileLock
     public function invokeEx(callable $callback)
     {
         if (flock($this->handle, LOCK_EX)) {
-            $args = array_splice(func_get_args(), 1);
+            $args = func_get_args();
+            $args = array_splice($args, 1);
 
             $result = call_user_func_array($callback,  $args);
 
@@ -68,6 +69,6 @@ class FileLock
             return false;
         };
 
-        return $this->invokeEx($callback, $handle);
+        return $this->invokeEx($callback, $this->handle);
     }
 }
