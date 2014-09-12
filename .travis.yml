@@ -9,13 +9,14 @@ php:
 
 env:
   matrix:
-    - "FOO=BAR"
+    - "FOO=BAR;MORE=YES"
     - "FOX=BAZ"
   global:
     - "BAR=FOO"
     - "BAZ=FOX"
 
 before_script:
+  - echo $MORE;
   - echo $FOO;
   - echo $FOX;
   - echo $BAR;
