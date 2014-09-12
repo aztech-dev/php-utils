@@ -7,7 +7,19 @@ php:
   - hhvm
   - hhvm-nightly
 
+env:
+  matrix:
+    - "FOO=BAR"
+    - "FOX=BAZ"
+  env:
+    - "BAR=FOO"
+    - "BAZ=FOX"
+
 before_script:
+  - echo $FOO;
+  - echo $FOX;
+  - echo $BAR;
+  - echo $BAZ;
   - composer selfupdate
   - PHP_CURRENT='5.6'
 
