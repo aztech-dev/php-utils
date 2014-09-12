@@ -11,7 +11,7 @@ env:
   matrix:
     - "FOO=BAR"
     - "FOX=BAZ"
-  env:
+  global:
     - "BAR=FOO"
     - "BAZ=FOX"
 
