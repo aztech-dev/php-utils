@@ -30,6 +30,17 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         return $this->items;
     }
 
+    public function iterate($coerce = false, $coercionKey = 0)
+    {
+        $values = [];
+
+        foreach ($this as $name => $value) {
+            $values[$name] = $this->wrapIfNecessary($value, $coerce, $coercionKey);
+        }
+
+        return new self($values);
+    }
+
     /**
      * Resolves a value stored in an array, optionally by using dot notation to access nested elements.
      *
@@ -38,19 +49,19 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
      * @param mixed $default
      * @return mixed The resolved value or the provided default value.
      */
-    public function resolve($key, $default = null, $coerceArray = false)
+    public function resolve($key, $default = null, $coerceArray = false, $coercionKey = 0)
     {
-        $value = $this->resolver->resolve($this->items, $key, $default);
+        $value = $this->resolver->resolve($this->items, $key, $default, $coercionKey);
 
         return $this->wrapIfNecessary($value, $coerceArray);
     }
 
-    private function wrapIfNecessary($value, $coerceArray = false)
+    private function wrapIfNecessary($value, $coerceArray = false, $coercionKey = 0)
     {
-        if (! is_array($value) && $coerceArray == true) {
-            $value = [ $value ];
+        if (! is_array($value) && ! ($value instanceof self) && $coerceArray == true) {
+            $value = [ $coercionKey => $value ];
         }
-        
+
         if (is_array($value)) {
             return new static($value);
         }
