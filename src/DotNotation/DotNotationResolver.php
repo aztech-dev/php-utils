@@ -5,7 +5,6 @@ namespace Aztech\Util\DotNotation;
 /**
  * @deprecated Warning, all static methods are deprecated. Use instance methods instance. Deprecation and static methods
  * will be removed in next major release.
- * @todo Turn recursive into iterative
  * @author thibaud
  * @method mixed resolve(mixed $value, string $name, mixed $default = null)
  * @method bool propertyOrIndexExists(mixed $value, string $name)
@@ -46,26 +45,33 @@ class DotNotationResolver
 
     private function publicResolve($value, $name, $default = null)
     {
-        if (! $this->parser->hasDot($name)) {
-            return $this->getDirectProperty($value, $name, $default);
+        $elements = $this->parser->getComponents($name);
+        $current = $value;
+        $index = 0;
+
+        do {
+            $current = $this->getDirectProperty($current, $elements[$index++], $default);
         }
+        while ($current && $index < count($elements));
 
-        $elements = $this->parser->getComponents($name, 2);
-        $firstLevelObject = $this->publicResolve($value, $elements[0], $default);
-
-        return $this->publicResolve($firstLevelObject, $elements[1], $default);
+        return $current;
     }
 
     private function publicPropertyOrIndexExists($value, $name)
     {
-        if (! $this->parser->hasDot($name)) {
-            return $this->checkDirectProperty($value, $name);
+        $elements = $this->parser->getComponents($name);
+        $current = $value;
+        $index = 0;
+
+        for ($index = 0; $index < count($elements); $index++) {
+            if (! $this->checkDirectProperty($current, $elements[$index]))  {
+                return  false;
+            }
+
+            $current = $this->getDirectProperty($current, $elements[$index], false);
         }
 
-        $elements = $this->parser->getComponents($name, 2);
-        $firstLevelObject = $this->publicResolve($value, $elements[0], null);
-
-        return $this->publicPropertyOrIndexExists($firstLevelObject, $elements[1]);
+        return  true;
     }
 
     private function checkDirectProperty($value, $name)
