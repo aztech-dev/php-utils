@@ -38,15 +38,19 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
      * @param mixed $default
      * @return mixed The resolved value or the provided default value.
      */
-    public function resolve($key, $default = null)
+    public function resolve($key, $default = null, $coerceArray = false)
     {
         $value = $this->resolver->resolve($this->items, $key, $default);
 
-        return $this->wrapIfNecessary($value);
+        return $this->wrapIfNecessary($value, $coerceArray);
     }
 
-    private function wrapIfNecessary($value)
+    private function wrapIfNecessary($value, $coerceArray = false)
     {
+        if (! is_array($value) && $coerceArray == true) {
+            $value = [ $value ];
+        }
+        
         if (is_array($value)) {
             return new static($value);
         }
