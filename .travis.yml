@@ -8,21 +8,10 @@ php:
   - hhvm-nightly
 
 env:
-  matrix:
-    - "FOO=BAR;MORE=YES"
-    - "FOX=BAZ"
-  global:
-    - "BAR=FOO"
-    - "BAZ=FOX"
+  - PHP_CURRENT='5.6'
 
 before_script:
-  - echo $MORE;
-  - echo $FOO;
-  - echo $FOX;
-  - echo $BAR;
-  - echo $BAZ;
   - composer selfupdate
-  - PHP_CURRENT='5.6'
 
 script:
   - make phpunit
