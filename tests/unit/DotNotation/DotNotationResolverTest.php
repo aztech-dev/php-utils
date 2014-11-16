@@ -48,7 +48,9 @@ class DotNotationResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testPropertyExistsReturnsCorrectValue($value, $name, $expected)
     {
-        $this->assertEquals($expected, DotNotationResolver::propertyOrIndexExists($value, $name));
+        $resolver = new DotNotationResolver();
+
+        $this->assertEquals($expected, $resolver->propertyOrIndexExists($value, $name));
     }
 
     public function getResolveItems()
@@ -88,7 +90,9 @@ class DotNotationResolverTest extends \PHPUnit_Framework_TestCase
      */
     public function testResolveReturnsCorrectValue($value, $name, $default, $expected)
     {
-        $this->assertEquals($expected, DotNotationResolver::resolve($value, $name, $default));
+        $resolver = new DotNotationResolver();
+
+        $this->assertEquals($expected, $resolver->resolve($value, $name, $default));
     }
 
 }

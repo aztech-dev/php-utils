@@ -19,6 +19,7 @@ class TypedCollection extends TypedIterator
     {
         $this->validate($item);
         $this->items[] = $item;
+        $this->keys = array_keys($this->items);
     }
 
     /**
@@ -47,6 +48,8 @@ class TypedCollection extends TypedIterator
         ), function ($first, $other) {
             return $first === $other;
         });
+
+        $this->keys = array_keys($this->items);
     }
 
     /**
@@ -66,6 +69,8 @@ class TypedCollection extends TypedIterator
         $this->items = array_udiff($this->items, $items, function ($first, $other) {
             return $first === $other;
         });
+
+        $this->keys = array_keys($this->items);
     }
 
     public function hasObject($item)

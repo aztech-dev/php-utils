@@ -8,6 +8,7 @@ use Aztech\Util\DotNotation\DotNotationResolver;
 /**
  *
  * @author thibaud
+ * @SuppressWarnings(PHPMD.TooManyMethods)
  */
 class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 {
@@ -35,6 +36,13 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         return $this->items;
     }
 
+    /**
+     *
+     * @param string $coerce
+     * @param bool $coercionKey
+     * @return self
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public function iterate($coerce = false, $coercionKey = 0)
     {
         $values = [];
@@ -49,7 +57,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
     /**
      *
      * @param callback $filter
-     * @return \Aztech\Util\Arrays\ArrayResolver
+     * @return ArrayResolver
      */
     public function filter(callable $filter)
     {
@@ -71,6 +79,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
      *            The key value to resolve.
      * @param mixed $default
      * @return mixed The resolved value or the provided default value.
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function resolve($key, $default = null, $coerceArray = false, $coercionKey = 0)
     {
@@ -79,6 +88,10 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         return $this->wrapIfNecessary($value, $coerceArray);
     }
 
+    /**
+     *
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     private function wrapIfNecessary($value, $coerceArray = false, $coercionKey = 0)
     {
         if (! is_array($value) && ! ($value instanceof self) && $coerceArray == true) {

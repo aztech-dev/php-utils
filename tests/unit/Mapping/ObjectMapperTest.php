@@ -47,6 +47,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
     public function testObjectToObjectMapping($source, $target, $mappings, $constants)
     {
         $mapper = new ObjectMapper();
+        $resolver = new DotNotationResolver();
 
         foreach ($mappings as $sourceProperty => $targetProperty) {
             $mapper->addMapping($sourceProperty, $targetProperty[0], false);
@@ -59,12 +60,12 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
         $mapper->map($source, $target);
 
         foreach ($mappings as $sourceProperty => $targetProperty) {
-            $this->assertEquals(DotNotationResolver::resolve($source, $sourceProperty),
-                DotNotationResolver::resolve($target, $targetProperty[0]));
+            $this->assertEquals($resolver->resolve($source, $sourceProperty),
+                $resolver->resolve($target, $targetProperty[0]));
         }
 
         foreach ($constants as $name => $value) {
-            $this->assertEquals(DotNotationResolver::resolve($target, $name), $value, $name);
+            $this->assertEquals($resolver->resolve($target, $name), $value, $name);
         }
     }
 
@@ -90,6 +91,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
     public function testObjectToObjectMappingIgnoresMissingOptionalSourceProperties($source, $target, $mappings, $constants)
     {
         $mapper = new ObjectMapper();
+        $resolver = new DotNotationResolver();
 
         foreach ($mappings as $sourceProperty => $targetProperty) {
             $sourceProperty .= '_missing_for_sure_' . md5(rand());
@@ -99,7 +101,7 @@ class ObjectMapperTest extends \PHPUnit_Framework_TestCase
         $mapper->map($source, $target);
 
         foreach ($mappings as $sourceProperty => $targetProperty) {
-            $this->assertFalse(DotNotationResolver::propertyOrIndexExists($target, $targetProperty[0]));
+            $this->assertFalse($resolver->propertyOrIndexExists($target, $targetProperty[0]));
         }
     }
 }

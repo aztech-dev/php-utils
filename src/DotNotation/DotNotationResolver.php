@@ -3,16 +3,12 @@
 namespace Aztech\Util\DotNotation;
 
 /**
- * @deprecated Warning, all static methods are deprecated. Use instance methods instance. Deprecation and static methods
- * will be removed in next major release.
  * @author thibaud
  * @method mixed resolve(mixed $value, string $name, mixed $default = null)
  * @method bool propertyOrIndexExists(mixed $value, string $name)
  */
 class DotNotationResolver
 {
-
-    private static $instance = null;
 
     private $parser = null;
 
@@ -25,25 +21,7 @@ class DotNotationResolver
         $this->parser = $parser;
     }
 
-    public static function __callStatic($method, $args)
-    {
-        if (self::$instance == null) {
-            self::$instance = new self(new DotNotationParser());
-        }
-
-        return call_user_func_array(array(self::$instance, $method), $args);
-    }
-
-    public function __call($method, $args)
-    {
-        $prefix = 'public';
-
-        if (method_exists($this, $prefix . $method)) {
-            return call_user_func_array(array($this, $prefix . $method), $args);
-        }
-    }
-
-    private function publicResolve($value, $name, $default = null)
+    public function resolve($value, $name, $default = null)
     {
         $elements = $this->parser->getComponents($name);
         $current = $value;
@@ -57,7 +35,7 @@ class DotNotationResolver
         return $current;
     }
 
-    private function publicPropertyOrIndexExists($value, $name)
+    public function propertyOrIndexExists($value, $name)
     {
         $elements = $this->parser->getComponents($name);
         $current = $value;
