@@ -10,6 +10,8 @@ class TypedIterator implements \Iterator
 
     protected $items = array();
 
+    protected $keys = array();
+
     public function __construct($typeName, array $items = array())
     {
         if (! class_exists($typeName, true) && ! interface_exists($typeName, true)) {
@@ -24,6 +26,7 @@ class TypedIterator implements \Iterator
         }
 
         $this->items = $items;
+        $this->keys = array_keys($items);
     }
 
     public function getTypeName()
@@ -55,12 +58,12 @@ class TypedIterator implements \Iterator
 
     public function current()
     {
-        return $this->items[$this->position];
+        return $this->items[$this->keys[$this->position]];
     }
 
     public function key()
     {
-        return $this->position;
+        return $this->keys[$this->position];
     }
 
     public function next()
@@ -70,6 +73,6 @@ class TypedIterator implements \Iterator
 
     public function valid()
     {
-        return isset($this->items[$this->position]);
+        return isset($this->keys[$this->position]);
     }
 }

@@ -25,6 +25,11 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         }
     }
 
+    public function merge(ArrayResolver $other)
+    {
+        return new self(array_merge($this->extract(), $other->extract()));
+    }
+
     public function extract()
     {
         return $this->items;
@@ -39,6 +44,24 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         }
 
         return new self($values);
+    }
+
+    /**
+     *
+     * @param callback $filter
+     * @return \Aztech\Util\Arrays\ArrayResolver
+     */
+    public function filter(callable $filter)
+    {
+        $filtered = [];
+
+        foreach ($this as $name => $value) {
+            if ($filter($name, $value)) {
+                $filtered[$name] = $value;
+            }
+        }
+
+        return new self($filtered);
     }
 
     /**
