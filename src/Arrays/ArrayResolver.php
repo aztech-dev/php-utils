@@ -40,8 +40,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
      *
      * @param boolean $coerce
      * @param mixed $coercionKey
-     * @return self
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     * @return self @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public function iterate($coerce = false, $coercionKey = 0)
     {
@@ -90,24 +89,35 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
     }
 
     /**
-     *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     private function wrapIfNecessary($value, $coerceArray = false, $coercionKey = 0)
     {
-        if (! is_array($value) && ! ($value instanceof self) && $coerceArray == true) {
-            $value = [ $coercionKey => $value ];
+        if ($this->shouldWrapValueInArray($value, $coerceArray)) {
+            $value = [
+                $coercionKey => $value
+            ];
         }
 
+        return $this->getWrappedValue($value);
+    }
+
+    private function getWrappedValue($value)
+    {
         if (is_array($value)) {
-            return new static($value);
+            $value = new static($value);
         }
-
         return $value;
+    }
+
+    private function shouldWrapValueInArray($value, $coerceArray)
+    {
+        return ! is_array($value) && ! ($value instanceof self) && $coerceArray == true;
     }
 
     /**
      * (non-PHPdoc)
+     *
      * @see StandardIterator::current()
      */
     public function current()
@@ -117,6 +127,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      * (non-PHPdoc)
+     *
      * @see Countable::count()
      */
     public function count()
@@ -126,6 +137,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      * (non-PHPdoc)
+     *
      * @see ArrayAccess::offsetSet()
      */
     public function offsetSet($offset, $value)
@@ -140,6 +152,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      * (non-PHPdoc)
+     *
      * @see ArrayAccess::offsetExists()
      */
     public function offsetExists($offset)
@@ -149,6 +162,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      * (non-PHPdoc)
+     *
      * @see ArrayAccess::offsetUnset()
      */
     public function offsetUnset($offset)
@@ -158,6 +172,7 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      * (non-PHPdoc)
+     *
      * @see ArrayAccess::offsetGet()
      */
     public function offsetGet($offset)
