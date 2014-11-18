@@ -39,7 +39,6 @@ class DotNotationResolver
     {
         $elements = $this->parser->getComponents($name);
         $current = $value;
-        $index = 0;
 
         for ($index = 0; $index < count($elements); $index++) {
             if (! $this->checkDirectProperty($current, $elements[$index]))  {

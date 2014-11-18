@@ -38,8 +38,8 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
 
     /**
      *
-     * @param string $coerce
-     * @param bool $coercionKey
+     * @param boolean $coerce
+     * @param mixed $coercionKey
      * @return self
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -75,9 +75,10 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
     /**
      * Resolves a value stored in an array, optionally by using dot notation to access nested elements.
      *
-     * @param string $key
-     *            The key value to resolve.
+     * @param string $key The key value to resolve.
      * @param mixed $default
+     * @param boolean $coerceArray
+     * @param mixed $coercionKey
      * @return mixed The resolved value or the provided default value.
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
@@ -105,16 +106,28 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         return $value;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see StandardIterator::current()
+     */
     public function current()
     {
         return $this->wrapIfNecessary(current($this->items));
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see Countable::count()
+     */
     public function count()
     {
         return count($this->items);
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetSet()
+     */
     public function offsetSet($offset, $value)
     {
         if (is_null($offset)) {
@@ -125,16 +138,28 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         $this->items[$offset] = $value;
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetExists()
+     */
     public function offsetExists($offset)
     {
         return isset($this->items[$offset]);
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetUnset()
+     */
     public function offsetUnset($offset)
     {
         unset($this->items[$offset]);
     }
 
+    /**
+     * (non-PHPdoc)
+     * @see ArrayAccess::offsetGet()
+     */
     public function offsetGet($offset)
     {
         return isset($this->items[$offset]) ? $this->items[$offset] : null;
