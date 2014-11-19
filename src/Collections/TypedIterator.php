@@ -75,4 +75,13 @@ class TypedIterator implements \Iterator
     {
         return isset($this->keys[$this->position]);
     }
+
+    public function toArray($preserveKeys = false)
+    {
+        if ((bool)$preserveKeys) {
+            return $this->items;
+        }
+
+        return array_values($this->items);
+    }
 }
