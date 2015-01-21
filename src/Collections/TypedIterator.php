@@ -76,6 +76,9 @@ class TypedIterator implements \Iterator
         return isset($this->keys[$this->position]);
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public function toArray($preserveKeys = false)
     {
         if ((bool)$preserveKeys) {
