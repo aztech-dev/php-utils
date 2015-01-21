@@ -26,6 +26,11 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         }
     }
 
+    public function __invoke($key, $default = null, $coerceArray = false, $coercionKey = 0)
+    {
+        return $this->resolve($key, $default, $coerceArray, $coercionKey);
+    }
+
     public function merge(ArrayResolver $other)
     {
         return new self(array_merge($this->extract(), $other->extract()));
