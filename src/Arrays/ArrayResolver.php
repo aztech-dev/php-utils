@@ -26,6 +26,9 @@ class ArrayResolver extends StandardIterator implements \Countable, \ArrayAccess
         }
     }
 
+    /**
+     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     */
     public function __invoke($key, $default = null, $coerceArray = false, $coercionKey = 0)
     {
         return $this->resolve($key, $default, $coerceArray, $coercionKey);
